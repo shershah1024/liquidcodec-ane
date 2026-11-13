@@ -45,7 +45,27 @@ Neural Engine (Core ML compute plan). The first call after loading compiles for 
   `convert/export_tail.py` writes the tail file.
 - `examples/decode_wav.py`: Python, wav -> codes (Liquid's PyTorch encoder) -> ANE decode -> wav, with `--compare`.
 - `examples/swift/`: a standalone Swift decoder (`LiquidANEDecoder`) and a CLI: codes (int32 [12, T]) -> 24 kHz wav.
-- `samples/`: an original clip and its ANE decode, plus `codes_example.npy`. The voice is our own synthetic voice (Qwen3-TTS VoiceDesign, Apache-2.0).
+- `samples/`: seven real human recordings in seven languages, each as `*_original.flac` and `*_ane_int8.flac` (see Samples), plus `codes_example.npy` (the English clip's codes).
+
+## Samples
+Real human speech, one clip per language: the original recording and its Liquid-Codec codes decoded on the Neural Engine with the int8 package.
+SNR is against Liquid's PyTorch fp32 decode of the same codes (one clip each).
+
+| language | file prefix | source | speaker | licence | SNR |
+|---|---|---|---|---|---|
+| English | `en_libritts` | LibriTTS-R, test.clean, utterance 4446_2275_000002_000009 | 4446 | CC-BY-4.0 | 34.6 dB |
+| Hindi | `hi_rasa` | AI4Bharat Rasa (Hindi), test clip HIN_F_CONV_01840 | the dataset's female speaker | CC-BY-4.0 | 26.3 dB |
+| Spanish | `es_419` | Google FLEURS es_419, test, id 1870 | not published (male) | CC-BY-4.0 | 25.1 dB |
+| French | `fr_fr` | Google FLEURS fr_fr, test, id 1679 | not published (male) | CC-BY-4.0 | 29.6 dB |
+| German | `de_de` | Google FLEURS de_de, test, id 1885 | not published (male) | CC-BY-4.0 | 26.7 dB |
+| Japanese | `ja_jp` | Google FLEURS ja_jp, test, id 1679 | not published (male) | CC-BY-4.0 | 26.3 dB |
+| Mandarin | `cmn_hans_cn` | Google FLEURS cmn_hans_cn, test, id 1687 | not published (male) | CC-BY-4.0 | 27.9 dB |
+
+FLEURS audio is 16 kHz (kept as is in `*_original.flac`); it was resampled to 24 kHz before encoding. The Rasa clip was resampled from 48 kHz to 24 kHz.
+
+**Attribution.** LibriTTS-R: Y. Koizumi et al., "LibriTTS-R: A Restored Multi-Speaker Text-to-Speech Corpus", 2023 (from LibriTTS / LibriSpeech, public-domain
+LibriVox audiobooks), CC-BY-4.0. Rasa: AI4Bharat, IIT Madras, "Rasa: Building Expressive Speech Synthesis Systems for Indian Languages", CC-BY-4.0.
+FLEURS: A. Conneau et al., "FLEURS: Few-shot Learning Evaluation of Universal Representations of Speech", Google, 2022, CC-BY-4.0.
 
 ## Changes needed for the ANE
 - The quantizer's two output projections (48 -> 256 -> 512) are folded into one, and linears are written as 1x1 convolutions on (1, C, 1, T) tensors.
@@ -55,14 +75,14 @@ Neural Engine (Core ML compute plan). The first call after loading compiles for 
 
 ## Use
 ```
-# Python (macOS 15+, Apple silicon): pip install numpy torch soundfile coremltools transformers huggingface_hub
-python examples/decode_wav.py --wav samples/voice_original.wav --out out.wav --compare
+# Python (macOS 15+, Apple silicon): pip install numpy torch soundfile soxr coremltools transformers huggingface_hub
+python examples/decode_wav.py --wav samples/en_libritts_original.flac --out out.wav --compare
 python examples/decode_wav.py --codes samples/codes_example.npy --out out.wav            # int8 by default; --model lc_dec_ane.mlmodelc for fp16
 
 # Swift
 swiftc -O -o decode examples/swift/LiquidANEDecoder.swift examples/swift/main.swift
 python -c "import numpy as np; np.load('samples/codes_example.npy').astype('<i4').tofile('codes.bin')"
-./decode models codes.bin 39 out.wav
+./decode models codes.bin 55 out.wav
 
 # Re-convert from Liquid's weights (needs coremltools; check first, then convert)
 python convert/lc_ane.py check  /path/to/Liquid-Codec

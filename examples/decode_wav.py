@@ -5,7 +5,7 @@
       and prints the SNR of the ANE audio against it.
   python examples/decode_wav.py --codes codes.npy --out out.wav      (codes: int array [12, frames], values 0-2015, 12.5 frames/s)
 
-Needs: macOS 15+, Apple silicon, python 3.10+, numpy, torch, soundfile, coremltools (>= 8); for --wav/--compare also transformers and
+Needs: macOS 15+, Apple silicon, python 3.10+, numpy, torch, soundfile, soxr, coremltools (>= 8); for --wav/--compare also transformers and
 huggingface_hub (the Liquid-Codec repo, LFM Open License v1.0, is downloaded from Hugging Face)."""
 import argparse, os, sys, time
 import numpy as np, soundfile as sf, torch, torch.nn.functional as F
@@ -26,7 +26,7 @@ ref = None
 if a.wav:
     x, sr = sf.read(a.wav, dtype="float32"); x = x.mean(1) if x.ndim > 1 else x
     if sr != 24000:
-        import torchaudio; x = torchaudio.functional.resample(torch.from_numpy(x), sr, 24000).numpy()
+        import soxr; x = soxr.resample(x, sr, 24000)
     ref = liquid()
     with torch.no_grad(): codes = ref.encode(torch.from_numpy(x)[None]).audio_codes[0].numpy()
 else:

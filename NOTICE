@@ -8,3 +8,5 @@ This repository is a Derivative Work: a Core ML conversion of Liquid-Codec's dec
 - convert/lc_ane.py: modified re-implementation of Liquid AI's decoder modeling code (changes listed at the top of the file).
 - examples/, convert/export_tail.py: new code.
 Use of the models and weights here is under Liquid AI's LFM Open License v1.0, including its commercial-use limit (Section 5).
+
+Sample audio in samples/ is third-party: LibriTTS-R, AI4Bharat Rasa and Google FLEURS recordings, each CC-BY-4.0 (attribution in README.md, Samples).
