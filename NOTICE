@@ -1,0 +1,10 @@
+Liquid-Codec
+Copyright (c) Liquid AI, Inc.
+https://huggingface.co/LiquidAI/Liquid-Codec (revision b5abfac46ef92275f191a52c41013315f237301d)
+Licensed under the LFM Open License v1.0 (LICENSE-LFM-Open-v1.0.txt). The upstream repository ships no NOTICE file of its own.
+
+This repository is a Derivative Work: a Core ML conversion of Liquid-Codec's decoder for the Apple Neural Engine.
+- models/lc_dec_ane_int8.mlmodelc, models/lc_dec_ane.mlmodelc, models/lc_tail_f32.bin: Liquid AI's decoder weights, converted (int8 and fp16 Core ML programs; float32 tail).
+- convert/lc_ane.py: modified re-implementation of Liquid AI's decoder modeling code (changes listed at the top of the file).
+- examples/, convert/export_tail.py: new code.
+Use of the models and weights here is under Liquid AI's LFM Open License v1.0, including its commercial-use limit (Section 5).

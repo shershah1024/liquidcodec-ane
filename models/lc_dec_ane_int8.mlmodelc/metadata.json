@@ -1,0 +1,88 @@
+[
+  {
+    "metadataOutputVersion" : "3.0",
+    "shortDescription" : "Liquid-Codec decoder LFM stack, fp16, CTX=20 NEW=20 codec frames; tail on CPU fp32",
+    "outputSchema" : [
+      {
+        "hasShapeFlexibility" : "0",
+        "isOptional" : "0",
+        "dataType" : "Float16",
+        "formattedType" : "MultiArray (Float16 1 × 512 × 1 × 240)",
+        "shortDescription" : "",
+        "shape" : "[1, 512, 1, 240]",
+        "name" : "hidden",
+        "type" : "MultiArray"
+      }
+    ],
+    "storagePrecision" : "Mixed (Float16, Int8)",
+    "modelParameters" : [
+
+    ],
+    "specificationVersion" : 9,
+    "mlProgramOperationTypeHistogram" : {
+      "Ios18.mul" : 173,
+      "Ios18.conv" : 55,
+      "Ios18.sub" : 1,
+      "Ios18.matmul" : 6,
+      "Ios18.concat" : 12,
+      "Ios18.sigmoid" : 3,
+      "Ios18.rsqrt" : 39,
+      "Ios18.add" : 65,
+      "UpsampleNearestNeighbor" : 1,
+      "Ios18.silu" : 8,
+      "Ios16.reduceMean" : 39,
+      "Ios18.sliceByIndex" : 39,
+      "Ios18.softmax" : 3,
+      "Ios18.transpose" : 3,
+      "Ios18.constexprBlockwiseShiftScale" : 58,
+      "Ios18.reshape" : 12,
+      "Pad" : 5
+    },
+    "computePrecision" : "Mixed (Float16, Float32, Int32)",
+    "isUpdatable" : "0",
+    "stateSchema" : [
+
+    ],
+    "availability" : {
+      "macOS" : "15.0",
+      "tvOS" : "18.0",
+      "visionOS" : "2.0",
+      "watchOS" : "11.0",
+      "iOS" : "18.0",
+      "macCatalyst" : "18.0"
+    },
+    "modelType" : {
+      "name" : "MLModelType_mlProgram"
+    },
+    "inputSchema" : [
+      {
+        "hasShapeFlexibility" : "0",
+        "isOptional" : "0",
+        "dataType" : "Float16",
+        "formattedType" : "MultiArray (Float16 1 × 48 × 1 × 40)",
+        "shortDescription" : "",
+        "shape" : "[1, 48, 1, 40]",
+        "name" : "lat",
+        "type" : "MultiArray"
+      },
+      {
+        "hasShapeFlexibility" : "0",
+        "isOptional" : "0",
+        "dataType" : "Float16",
+        "formattedType" : "MultiArray (Float16 1 × 1 × 1 × 240)",
+        "shortDescription" : "",
+        "shape" : "[1, 1, 1, 240]",
+        "name" : "valid",
+        "type" : "MultiArray"
+      }
+    ],
+    "userDefinedMetadata" : {
+      "com.github.apple.coremltools.conversion_date" : "2026-11-13",
+      "com.github.apple.coremltools.source" : "torch==2.15.0",
+      "com.github.apple.coremltools.version" : "9.0",
+      "com.github.apple.coremltools.source_dialect" : "TorchScript"
+    },
+    "generatedClassName" : "int8tmp",
+    "method" : "predict"
+  }
+]
