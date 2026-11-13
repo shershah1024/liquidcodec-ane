@@ -51,6 +51,8 @@ Neural Engine (Core ML compute plan). The first call after loading compiles for 
 Real human speech, one clip per language: the original recording and its Liquid-Codec codes decoded on the Neural Engine with the int8 package.
 SNR is against Liquid's PyTorch fp32 decode of the same codes (one clip each).
 
+▶ **[Listen to six of them (48 s video)](samples/samples_demo.mp4)**: each language plays the original, then the Neural Engine int8 decode (French is left out of the video; its FLACs are in `samples/`). The first 3.8 s of speech in each clip are used, with one volume level per language shared by both versions.
+
 | language | file prefix | source | speaker | licence | SNR |
 |---|---|---|---|---|---|
 | English | `en_libritts` | LibriTTS-R, test.clean, utterance 4446_2275_000002_000009 | 4446 | CC-BY-4.0 | 34.6 dB |
