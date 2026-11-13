@@ -8,18 +8,22 @@ A Core ML conversion of the decoder of [Liquid AI's Liquid-Codec](https://huggin
 What we changed is listed in `NOTICE` and at the top of `convert/lc_ane.py`.
 
 ## Speed: CPU vs Neural Engine
-**5.9x faster on the Neural Engine (int8) than Liquid's original model on the CPU.**
+**About 6x faster on the Neural Engine than Liquid's original model on the CPU.** fp16 and int8 run at about the same speed; int8's gain is size
+(36 MB vs 72 MB), with no audible change.
 
-MacBook Air, Apple M3. One set of 10 speech clips (60.2 s of audio, n = 10), the same codes for every row.
+MacBook Air, Apple M3, the same 10 speech clips (60.2 s of audio) in every row. x real time = audio seconds / decode seconds, after a warm-up call.
 
-| decoder | size | x real time |
-|---|---|---|
-| Liquid's original PyTorch model, fp32, on the CPU (4 threads) | 147 MB (whole codec) | 53x |
-| this conversion, fp16, on the Neural Engine | 72 MB | 227x |
-| **this conversion, int8 weights (recommended), on the Neural Engine** | **36 MB** | **315x** |
+| decoder | size | quiet machine, 1 run | busy machine, 3 runs: mean (range) |
+|---|---|---|---|
+| Liquid's original PyTorch model, fp32, CPU (4 threads) | 147 MB (whole codec) | 53x | 33x (27-36) |
+| this conversion, fp16, CPU only | 72 MB | 93x | 54x (43-60) |
+| this conversion, int8, CPU only | 36 MB | 95x | 46x (35-56) |
+| this conversion, fp16, Neural Engine | 72 MB | 320x | 180x (152-204) |
+| **this conversion, int8, Neural Engine (recommended)** | **36 MB** | **316x** | **218x (188-248)** |
 
-All 464 operations of both packages run on the Neural Engine (Core ML compute plan). The first call after loading is slower: compiling for the
-ANE takes ~3-5 s once per process.
+The "busy" runs had other processes using ~3 CPU cores (alternating row order, n = 10 clips per run), so all rows are slower there. The
+Neural Engine-to-PyTorch ratio is ~6x on the quiet machine and 5.5-6.7x on the busy one. All 464 operations of both packages run on the
+Neural Engine (Core ML compute plan). The first call after loading compiles for the ANE (~3-5 s once per process).
 
 ## Does it match the original?
 - Against Liquid's PyTorch fp32 decode of the same codes (same 10 clips): fp16 SNR 38.9 dB (sd 5.4, min 26.0); int8 27.6 dB (sd 3.2, min 20.3).
